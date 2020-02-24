@@ -1,0 +1,132 @@
+{{$path := splitList "/" .OriginalReq.URL.Path}}
+{{$name := slice $path 1 | join "/"}}
+{{$file := include (printf "/%s/index.md" $name)}}
+
+<!DOCTYPE html>
+
+<html lang="en">
+	<head>
+		<title>camille.sh</title>
+
+		<meta name="author" content="Camille">
+		<meta name="description" content="Camille's personal domain & filehost, used to display various stuff he created, wrote or collected.">
+		<meta name="google-site-verification" content="lmD3pZfr3IIwCx0r2zFS56BcNxhz5fhAyjB8yGqNspM">
+
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="mobile-web-app-capable" content="yes">
+		<meta name="theme-color" content="#EEE1DD">
+
+		<link rel="icon" type="image/png" sizes="32x32" href="/static/img/favicon-32x32.png">
+		<link rel="icon" type="image/png" sizes="16x16" href="/static/img/favicon-16x16.png">
+
+		<link rel="stylesheet" href="/static/css/style.css">
+		<link rel="stylesheet" href="/static/css/mobile.css" media="(max-width: 1024px)">
+		<link rel="stylesheet" href="/static/css/desktop.css" media="(min-width: 1025px)">
+		<link rel="stylesheet" href="/static/css/overlay-scrollbars.min.css">
+
+		<link rel="preload" href="/static/font/crimson-pro-normal.woff2" as="font" crossorigin>
+		<link rel="preload" href="/static/font/crimson-pro-italic.woff2" as="font" crossorigin>
+		<link rel="preload" href="/static/font/avenir-normal-600.woff2" as="font" crossorigin>
+		<link rel="preload" href="/static/font/avenir-normal-700.woff2" as="font" crossorigin>
+
+		<script src="/static/js/overlay-scrollbars.min.js" defer></script>
+		<script src="/static/js/gsap.min.js" defer></script>
+		<script src="/static/js/nearby.min.js"></script>
+		<script src="/static/js/script.js"></script>
+	</head>
+
+	<body>
+		<div id="noise"></div>
+
+		<header>
+			<a href="/">
+				<div id="card">
+					<span id="c">c</span>
+					<span id="ip">136.224.101.74</span>
+					<span id="logo">camille.sh</span>
+				</div>
+			</a>
+		</header>
+
+		<nav>
+			<div id="toggle">
+				<img class="icon show" src="/static/svg/bars.svg" alt="menu">
+				<img class="icon hide" src="/static/svg/times.svg" alt="close">
+			</div>
+
+			<div id="items">
+				<div class="items-container">
+					<div class="item">
+						<a href="/thoughts">
+							<img class="icon" src="/static/svg/coffee.svg" alt="icon">
+							<span class="title">Thoughts</span>
+						</a>
+					</div>
+
+					<div class="sub-items">
+						{{range $k, $v := listFiles "/thoughts"}}
+							{{if not (ext $v)}}
+								<div class="sub-item-container">
+									<div class="item">
+										<a href="/thoughts/{{$v}}">
+											<img class="icon-small" src="/static/svg/dot-circle.svg" alt="icon">
+											<span class="title">{{title $v}}</span>
+										</a>
+									</div>
+								</div>
+							{{end}}
+						{{end}}
+					</div>
+				</div>
+
+				<div class="items-container">
+					<div class="item">
+						<a href="/design">
+							<img class="icon" src="/static/svg/palette.svg" alt="icon">
+							<span class="title">Design</span>
+						</a>
+					</div>
+
+					<div class="sub-items">
+						{{range $k, $v := listFiles "/design"}}
+							{{if not (ext $v)}}
+								<div class="sub-item-container">
+									<div class="item">
+										<a href="/design/{{$v}}">
+											<img class="icon-small" src="/static/svg/dot-circle.svg" alt="icon">
+											<span class="title">{{title $v}}</span>
+										</a>
+									</div>
+								</div>
+							{{end}}
+						{{end}}
+					</div>
+				</div>
+
+				<div class="items-container">
+					<div class="item">
+						<a href="/upload">
+							<img class="icon" src="/static/svg/paper-plane.svg" alt="icon">
+							<span class="title">Upload</span>
+						</a>
+					</div>
+				</div>
+
+				<div class="items-container">
+					<div class="item">
+						<a href="/about">
+							<img class="icon" src="/static/svg/address-card.svg" alt="icon">
+							<span class="title">About</span>
+						</a>
+					</div>
+				</div>
+			<div>
+		</nav>
+
+		<main>
+			<div id="content">
+				{{markdown $file}}
+			</div>
+		</main>
+	</body>
+</html>

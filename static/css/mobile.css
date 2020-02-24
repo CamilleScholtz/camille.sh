@@ -1,0 +1,129 @@
+/* Base */
+
+body::before {
+	content: "";
+	backface-visibility: hidden;
+	background: #BAA393;
+	bottom: 80px;
+	box-shadow: 40px -329px 200px #FBEADF, 0px 0px 30px 20px #B7A192, 30px -110px 150px #AD9889, -70px -5px 60px #B7A192;
+	height: 100px;
+	position: absolute;
+	width: calc(100% - (2 * var(--body-margin)) - 80px);
+	right: 20px;
+	z-index: -1;
+}
+
+
+/* Grid */
+
+body {
+	--header-height: 315px;
+	--body-margin: 20px;
+}
+
+body {
+	grid-template-areas: "main";
+	grid-template-columns: auto;
+	grid-template-rows: calc(100vh - (var(--body-margin) * 2));
+	height: 100%;
+	margin: var(--body-margin);
+}
+
+header {
+	display: none;
+}
+
+main {
+	border-radius: 2px;
+	box-shadow: 0px 5px 55px -20px #B7A192;
+}
+
+
+/* Nav */
+
+nav {
+	bottom: var(--body-margin);
+	left: var(--body-margin);
+	position: absolute;
+	z-index: 100;
+}
+
+nav #toggle {
+	align-items: center;
+	background: #C6CACD;
+	border-radius: 2px;
+	box-shadow: inset -10px 0px 30px -8px #A0A9AF;
+	display: flex;
+	height: 80px;
+	transition: all 0.4s;
+	transition-property: background, border-radius, box-shadow, transform;
+	width: 80px;
+	z-index: 100;
+}
+
+nav #toggle.open {
+	background: #6B734B;
+	border-radius: 5px;
+	box-shadow: 0px 6px 40px -5px #828778, 0px 6px 20px -10px #828778;
+	transform: rotate(-1.5deg) translate(calc(100vw - 80px - (var(--body-margin) * 2) - 45px), -45px);
+}
+
+nav #toggle .icon {
+	left: calc(50% - 14px);
+	position: absolute;
+	transition: all 0.6s;
+	transition-property: opacity, transform;
+	width: 28px;
+}
+
+nav #toggle .hide,
+nav #toggle.open .show {
+	opacity: 0;
+	transform: scale(0);
+}
+
+nav #toggle .show,
+nav #toggle.open .hide {
+	opacity: 1;
+	transform: scale(1);
+}
+
+nav #items {
+	backface-visibility: hidden;
+	background: #C6CACD;
+	bottom: 0px;
+	border-radius: 2px;
+	box-shadow: inset -20px 0px 80px -8px #A0A9AF;
+	height: 80px;
+	opacity: 0.5;
+	overflow: hidden;
+	position: absolute;
+	width: 80px;
+	z-index: -1;
+}
+
+nav #items .items-container:first-of-type > .item {
+	border-top: none;
+}
+
+nav #items .item a {
+	align-items: center;
+	display: flex;
+	height: calc(12.5vh - (((var(--body-margin) * 2) / 8) + 37px));
+}
+
+
+/* Main */
+
+main {
+	padding: 34px;
+	padding-left: 20px;
+}
+
+main #content {
+	font-size: 21px;
+}
+
+main #content:first-child::first-letter {
+	font-size: 60px;
+}

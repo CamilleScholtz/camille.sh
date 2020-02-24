@@ -1,0 +1,77 @@
+/* Base */
+
+body {
+	box-shadow: 0px 5px 55px -30px #B7A192;
+}
+
+body::before {
+	content: "";
+	backface-visibility: hidden;
+	background: #BAA393;
+	bottom: 66px;
+	box-shadow: 40px -329px 200px #FBEADF, 0px 0px 30px 20px #B7A192, 30px -110px 150px #AD9889, -70px -5px 60px #B7A192;
+	filter: blur(10px);
+	height: 100px;
+	left: calc(var(--body-margin) + 210px);
+	position: absolute;
+	transform: skew(-61deg);
+	width: calc(100% - (2 * var(--body-margin)) - 60px);
+	z-index: -1;
+}
+
+
+/* Grid */
+
+body {
+	--header-height: 315px;
+	--body-margin: 90px;
+}
+
+body {
+	grid-template-areas:
+		"header main"
+		"nav    main";
+	grid-template-columns: 384px auto;
+	grid-template-rows: var(--header-height) auto;
+	height: calc(100vh - (var(--body-margin) * 2));
+	margin: var(--body-margin);
+}
+
+nav {
+	border-radius: 2px 0px 0px 2px;
+	padding-top: calc(var(--header-height) - 15px);
+	margin-top: calc(var(--header-height) * -1);
+}
+
+main {
+	border-radius: 0px 1px 1px 0px;
+}
+
+
+/* Nav */
+
+nav {
+	background: #C6CACD;
+	box-shadow: inset -20px 0px 80px -8px #A0A9AF;
+}
+
+nav #toggle {
+	display: none;
+}
+
+nav #items .items-container:last-of-type .item {
+	border-bottom: 1px dashed #A8B0B5;
+}
+
+
+/* Main */
+
+main #content {
+	font-size: 23px;
+	max-width: 800px;
+	padding: 60px;
+}
+
+main #content:first-child::first-letter {
+	font-size: 80px;
+}
