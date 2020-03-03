@@ -114,9 +114,9 @@ const toggle = (nav) => {
 			gsap.to(items, {
 				duration: 0.3,
 				ease:     "expo.inOut",
-				height:   "calc(100vh - 40px)",
+				height:   "calc(100vh - (14px * 2)",
 				opacity:  1,
-				width:    "calc(100vw - 40px)",
+				width:    "calc(100vw - (14px * 2)",
 			});
 		}
 	});
