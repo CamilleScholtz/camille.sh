@@ -1,20 +1,57 @@
 // Style scrollbar.
-let scroll = () => {
-	OverlayScrollbars(document.querySelector("main"), {});
+const scroll = (main) => {
+	let scale    = 0;
+	let ticking  = false;
+	const blocks = main.querySelectorAll(".block");
+	const title  = main.querySelector("h1");
+
+	OverlayScrollbars(main, {
+		callbacks: {
+			onScroll: (ev) => {
+				pos = ev.target.scrollTop;
+				if (pos > 400) {
+					return;
+				}
+			
+				if (ticking) {
+					return;
+				}
+
+				window.requestAnimationFrame(() => {
+					gsap.to(blocks, {
+						duration:   2,
+						ease:       "expo.out",
+						stagger:    0.04,
+						translateY: pos * 1.8,
+					});
+
+					gsap.to(title, {
+						duration:   1.3,
+						ease:       "expo.out",
+						translateY: pos * 3,
+					});
+
+					ticking = false;
+				});
+
+				ticking = true;
+			},
+		},
+	});
 }
 
 // Update window title.
-let title = () => {
-	let path = window.location.pathname.split("/").pop();
-	if (path == "") {
+const title = (main) => {
+	const title = main.querySelector("h1");
+	if (!title) {
 		return;
 	}
 
-	document.title = "camille.sh / " + path;
+	document.title = "camille.sh" + title.innerText;
 }
 
 // Expand active nav sub items.
-let active = (nav) => {
+const active = (nav) => {
 	// Find active nav link.
 	let active = nav.querySelector(".item a[href='" + window.location.pathname +
 		"']");
@@ -27,7 +64,7 @@ let active = (nav) => {
 	active.classList.add("active");
 
 	// find active nav link sub links.
-	let children = active.closest(".items-container").querySelectorAll(
+	const children = active.closest(".items-container").querySelectorAll(
 		".sub-items .item");
 
 	// Expand active nav sub items.
@@ -35,46 +72,36 @@ let active = (nav) => {
 }
 
 // Expand nav sub items on proximity.
-let proximity = (nav) => {
-	let items = nav.querySelector("#items");
+const proximity = (nav) => {
+	const items    = nav.querySelector("#items");
+	const children = items.querySelectorAll(
+		".items-container .sub-items .item");
 
-	nav.querySelectorAll(".items-container").forEach((el) => {
-		let children = el.querySelectorAll(".sub-items .item");
-		if (children.length == 0) {
-			return;
-		}
-
-		// TODO: Possibly make the selector `el`.
-		new Nearby(items, {
-			onProgress: (dist) => {
-				const h = Nearby.lineEq(0, 64, 150, 0, dist);
-				const o = Nearby.lineEq(0, 1, 130, 0, dist);
-
-				children.forEach((el) => {
-					gsap.to(el, {
-						duration: .8,
-						ease:     "expo.out",
-						maxHeight: Math.max(h, 0),
-						opacity:   Math.max(o, 0),
-					});
-				})
-		    }
-		});
+	new Nearby(items, {
+		onProgress: (dist) => {
+			gsap.to(children, {
+				duration:  0.8,
+				ease:      "expo.out",
+				stagger:   0.05,
+				maxHeight: Math.max(Nearby.lineEq(0, 64, 150, 0, dist), 0),
+				opacity:   Math.max(Nearby.lineEq(0, 1, 130, 0, dist), 0),
+			});
+		},
 	});
 }
 
 // Expand nav on click.
-let toggle = (nav) => {
-	let toggle   = nav.querySelector("#toggle");
-	let items    = nav.querySelector("#items");
-	let children = nav.querySelectorAll(".sub-items .item");
+const toggle = (nav) => {
+	const toggle   = nav.querySelector("#toggle");
+	const items    = nav.querySelector("#items");
+	const children = nav.querySelectorAll(".sub-items .item");
 
 	toggle.addEventListener("click", (ev) => {
 		if (toggle.classList.contains("open")) {
 			toggle.classList.remove("open");
 
 			gsap.to(items, {
-				duration: .3,
+				duration: 0.3,
 				ease:     "expo.inOut",
 				height:   80,
 				opacity:  0.5,
@@ -85,7 +112,7 @@ let toggle = (nav) => {
 			children.forEach((el) => el.classList.add("open"));
 
 			gsap.to(items, {
-				duration: .3,
+				duration: 0.3,
 				ease:     "expo.inOut",
 				height:   "calc(100vh - 40px)",
 				opacity:  1,
@@ -95,12 +122,50 @@ let toggle = (nav) => {
 	});
 }
 
-window.addEventListener("DOMContentLoaded", (ev) => {
-	let nav = document.querySelector("nav");
+// Style upload input.
+const upload = (main) => {
+	const container = main.querySelector("#upload-container");
+	if (!container) {
+		return;
+	}
+	const input = container.querySelector("input");
+	const label = container.querySelector("span");
 
-	scroll();
-	title();
+	container.addEventListener("dragover", (ev) => {
+		ev.preventDefault();
+	});
+
+	container.addEventListener("drop", (ev) => {
+		ev.preventDefault();
+		
+		input.files = ev.dataTransfer.files;
+		input.dispatchEvent(new Event("change"));
+	});
+
+	input.addEventListener("change", (ev) => {
+		let file = "";
+		if (input.files.length > 1) {
+			file = input.files.length + " files selected";
+		} else {
+			file = input.files[0].name;
+		}
+
+		if (file) {
+			label.innerHTML = file;
+		} else {
+			label.innerHTML = label.innerHTML;
+		}
+	});
+}
+
+window.addEventListener("DOMContentLoaded", (ev) => {
+	const nav  = document.querySelector("nav");
+	const main = document.querySelector("main")
+
+	scroll(main);
+	title(main);
 	active(nav);
 	proximity(nav);
 	toggle(nav);
+	upload(main);
 });

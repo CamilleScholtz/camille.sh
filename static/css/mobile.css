@@ -3,9 +3,9 @@
 body::before {
 	content: "";
 	backface-visibility: hidden;
-	background: #BAA393;
+	background: #B79B8A;
 	bottom: 80px;
-	box-shadow: 40px -329px 200px #FBEADF, 0px 0px 30px 20px #B7A192, 30px -110px 150px #AD9889, -70px -5px 60px #B7A192;
+	box-shadow: 40px -329px 200px #FBE1D3, 0px 0px 30px 20px #B79B8A, 30px -110px 150px #AD9282, -70px -5px 60px #B79B8A;
 	height: 100px;
 	position: absolute;
 	width: calc(100% - (2 * var(--body-margin)) - 80px);
@@ -18,7 +18,7 @@ body::before {
 
 body {
 	--header-height: 315px;
-	--body-margin: 20px;
+	--body-margin: 14px;
 }
 
 body {
@@ -35,7 +35,7 @@ header {
 
 main {
 	border-radius: 2px;
-	box-shadow: 0px 5px 55px -20px #B7A192;
+	box-shadow: 0px 5px 55px -20px #B79B8A;
 }
 
 
@@ -50,9 +50,9 @@ nav {
 
 nav #toggle {
 	align-items: center;
-	background: #C6CACD;
+	background: #C6C2C2;
 	border-radius: 2px;
-	box-shadow: inset -10px 0px 30px -8px #A0A9AF;
+	box-shadow: inset -10px 0px 30px -8px #A0A2A6;
 	display: flex;
 	height: 80px;
 	transition: all 0.4s;
@@ -62,9 +62,9 @@ nav #toggle {
 }
 
 nav #toggle.open {
-	background: #6B734B;
+	background: #70734D;
 	border-radius: 5px;
-	box-shadow: 0px 6px 40px -5px #828778, 0px 6px 20px -10px #828778;
+	box-shadow: 0px 6px 40px -5px #828373, 0px 6px 20px -10px #828373;
 	transform: rotate(-1.5deg) translate(calc(100vw - 80px - (var(--body-margin) * 2) - 45px), -45px);
 }
 
@@ -90,10 +90,10 @@ nav #toggle.open .hide {
 
 nav #items {
 	backface-visibility: hidden;
-	background: #C6CACD;
+	background: #C6C2C2;
 	bottom: 0px;
 	border-radius: 2px;
-	box-shadow: inset -20px 0px 80px -8px #A0A9AF;
+	box-shadow: inset -20px 0px 80px -8px #A0A2A6;
 	height: 80px;
 	opacity: 0.5;
 	overflow: hidden;
@@ -120,10 +120,30 @@ main {
 	padding-left: 20px;
 }
 
+main #block-one {
+	bottom: 30px;
+	height: 160px;
+	width: 86vw;
+}
+
+main #block-two {
+	bottom: 160px;
+	height: 130px;
+	width: 78vw;
+}
+
 main #content {
 	font-size: 21px;
 }
 
-main #content:first-child::first-letter {
+main #content h1 {
+	font-size: 26px;
+}
+
+main #content h2 {
+	font-size: 26px;
+}
+
+main #content > p:first-of-type::first-letter {
 	font-size: 60px;
 }

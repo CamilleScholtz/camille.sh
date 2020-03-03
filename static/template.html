@@ -10,6 +10,7 @@
 
 		<meta name="author" content="Camille">
 		<meta name="description" content="Camille's personal domain & filehost, used to display various stuff he created, wrote or collected.">
+		<meta name="keywords" content="blog, design philosophy, religion, rice">
 		<meta name="google-site-verification" content="lmD3pZfr3IIwCx0r2zFS56BcNxhz5fhAyjB8yGqNspM">
 
 		<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -19,19 +20,21 @@
 		<link rel="icon" type="image/png" sizes="32x32" href="/static/img/favicon-32x32.png">
 		<link rel="icon" type="image/png" sizes="16x16" href="/static/img/favicon-16x16.png">
 
+		<link rel="stylesheet" href="/static/css/font.css">
 		<link rel="stylesheet" href="/static/css/style.css">
 		<link rel="stylesheet" href="/static/css/mobile.css" media="(max-width: 1024px)">
 		<link rel="stylesheet" href="/static/css/desktop.css" media="(min-width: 1025px)">
-		<link rel="stylesheet" href="/static/css/overlay-scrollbars.min.css">
+		<link rel="stylesheet" href="/static/css/chroma.css">
+		<link rel="stylesheet" href="/static/vendor/css/overlay-scrollbars.min.css">
 
 		<link rel="preload" href="/static/font/crimson-pro-normal.woff2" as="font" crossorigin>
 		<link rel="preload" href="/static/font/crimson-pro-italic.woff2" as="font" crossorigin>
 		<link rel="preload" href="/static/font/avenir-normal-600.woff2" as="font" crossorigin>
 		<link rel="preload" href="/static/font/avenir-normal-700.woff2" as="font" crossorigin>
 
-		<script src="/static/js/overlay-scrollbars.min.js" defer></script>
-		<script src="/static/js/gsap.min.js" defer></script>
-		<script src="/static/js/nearby.min.js"></script>
+		<script src="/static/vendor/js/overlay-scrollbars.min.js" defer></script>
+		<script src="/static/vendor/js/gsap.min.js" defer></script>
+		<script src="/static/vendor/js/nearby.min.js"></script>
 		<script src="/static/js/script.js"></script>
 	</head>
 
@@ -120,10 +123,13 @@
 						</a>
 					</div>
 				</div>
-			<div>
+			</div>
 		</nav>
 
-		<main>
+		<main style="overflow: hidden !important;">
+			<div id="block-one" class="block"></div>
+			<div id="block-two" class="block"></div>
+
 			<div id="content">
 				{{markdown $file}}
 			</div>

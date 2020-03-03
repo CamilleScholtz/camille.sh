@@ -1,100 +1,7 @@
-/* Fonts */
-
-
-@font-face {
-	font-display: swap;
-	font-family: "Crimson Pro";
-	font-style: normal;
-	font-weight: 400;
-	src: url("/static/font/crimson-pro-normal.woff2") format("woff2");
-	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-
-@font-face {
-	font-display: swap;
-	font-family: "Crimson Pro";
-	font-style: normal;
-	font-weight: 700;
-	src: url("/static/font/crimson-pro-normal.woff2") format("woff2");
-	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-
-@font-face {
-	font-display: swap;
-	font-family: "Crimson Pro";
-	font-style: italic;
-	font-weight: 400;
-	src: url("/static/font/crimson-pro-italic.woff2") format("woff2");
-	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-
-@font-face {
-	font-display: swap;
-	font-family: "Crimson Pro";
-	font-style: italic;
-	font-weight: 700;
-	src: url("/static/font/crimson-pro-italic.woff2") format("woff2");
-	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-
-@font-face {
-	font-display: swap;
-	font-family: "Crimson Pro";
-	font-style: normal;
-	font-weight: 400;
-	src: url("/static/font/crimson-pro-ext-normal.woff2") format("woff2");
-	unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
-}
-
-@font-face {
-	font-display: swap;
-	font-family: "Crimson Pro";
-	font-style: normal;
-	font-weight: 700;
-	src: url("/static/font/crimson-pro-ext-normal.woff2") format("woff2");
-	unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
-}
-
-@font-face {
-	font-display: swap;
-	font-family: "Crimson Pro";
-	font-style: italic;
-	font-weight: 400;
-	src: url("/static/font/crimson-pro-ext-italic.woff2") format("woff2");
-	unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
-}
-
-@font-face {
-	font-display: swap;
-	font-family: "Crimson Pro";
-	font-style: italic;
-	font-weight: 700;
-	src: url("/static/font/crimson-pro-ext-italic.woff2") format("woff2");
-	unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
-}
-
-
-@font-face {
-	font-display: swap;
-	font-family: "Avenir";
-	font-style: normal;
-	font-weight: 600;
-	src: url("/static/font/avenir-normal-600.woff2") format("woff2");
-}
-
-@font-face {
-	font-display: swap;
-	font-family: "Avenir";
-	font-style: normal;
-	font-weight: 700;
-	src: url("/static/font/avenir-normal-700.woff2") format("woff2");
-}
-
-
 /* Base */
 
 * {
-	color: #24374B;
+	color: #243547;
 	font-family: "Crimson Pro", serif;
 	list-style-type: none;
 	margin: 0;
@@ -104,7 +11,7 @@
 }
 
 body {
-	background: #E6D6CE;
+	background: #E6CEC3;
 	display: grid;
 	overflow: hidden;
 }
@@ -114,7 +21,7 @@ body #noise {
 	height: 100%;
 	left: 0;
 	mix-blend-mode: hard-light;
-	opacity: 0.08;
+	opacity: 0.06;
 	pointer-events: none;
 	position: fixed;
 	top: 0;
@@ -123,7 +30,7 @@ body #noise {
 }
 
 ::selection {
-	background: rgba(198, 202, 205, 0.99);
+	background: rgba(198, 194, 194, 0.99);
 } 
 
 
@@ -132,15 +39,16 @@ body #noise {
 .os-scrollbar {
 	margin: 8px !important;
 	width: 9px !important;
+	z-index: -1 !important;
 }
 
 .os-scrollbar-track {
-	background: #EEE1DD !important;
+	background: #EED8D1 !important;
 	border-radius: 1px !important;
 }
 
 .os-scrollbar-handle {
-	background: #C9624E !important;
+	background: #C95750 !important;
 	border-radius: 1px !important
 }
 
@@ -164,71 +72,11 @@ main {
 }
 
 
-/* Header */
-
-header #card {
-	background: #6B734B;
-	border-radius: 8px;
-	box-shadow: 0px 6px 40px -5px #828778, 0px 6px 20px -10px #828778;
-	height: calc(var(--header-height) / 1.586);
-	margin: 0 auto;
-	margin-top: 35px;
-	overflow: hidden;
-	transition: all 1s;
-	transition-property: transform, box-shadow;
-	transform: rotate(-1.2deg);
-	width: var(--header-height);
-	z-index: 1;
-}
-
-header #card::after {
-	background-image: url("/static/img/card.png");
-	content: "";
-	height: 110%;
-	left: -2%;
-	position: absolute;
-	transform: rotate(1.2deg);
-	top: -6%;
-	width: 110%;
-	z-index: -1;
-}
-
-header #card:hover {
-	transform: perspective(800px) rotateY(16deg) rotate(-4deg);
-	box-shadow: 0px 6px 40px -5px #828778, 0px 6px 20px -10px #828778, -1.5px 0px 0px #2C330D;
-}
-
-header #card span {
-	color: #F5EAE6;
-	position: absolute;
-}
-
-header #card #c {
-	color: #5F6641;
-	font-size: 340px;
-	font-weight: 700;
-	left: 20px;
-	top: -90px;
-}
-
-header #card #ip {
-	right: 16px;
-	top: 10px;
-	opacity: 0.6;
-}
-
-header #card #logo {
-	bottom: 10px;
-	font-size: 60px;
-	margin-left: 10px;
-}
-
-
 /* Nav */
 
 nav #items .item {
 	border-top: 1px dashed #A8B0B5;
-	transition: box-shadow 0.2s;
+	transition: box-shadow 0.3s;
 }
 
 nav #items .item a {
@@ -237,11 +85,11 @@ nav #items .item a {
 }
 
 nav #items .item:hover {
-	box-shadow: -4px 0px 0px #828C6C;
+	box-shadow: -4px 0px 0px #828666;
 }
 
 nav #items .active {
-	box-shadow: -4px 0px 0px #C9624E;
+	box-shadow: -4px 0px 0px #C95750;
 }
 
 nav #items .item a .icon {
@@ -278,7 +126,28 @@ nav #items .items-container .sub-items .item.open {
 /* Main */
 
 main {
-	background: #F5EAE6;
+	background: #F5E1D9;
+	transform: translateZ(0);
+}
+
+main .block {
+	backdrop-filter: blur(3px) saturate(220%);
+	backface-visibility: hidden;
+	border-radius: 1px;
+	position: fixed;
+	pointer-events: none;
+	right: 0px;
+	z-index: 100;
+}
+
+main #block-one {
+	background: rgba(172, 68, 61, 0.3);
+	box-shadow: 50px -6px 50px 5px rgba(140, 23, 15, 0.18);
+}
+
+main #block-two {
+	background: rgba(255, 194, 94, 0.3);
+	box-shadow: 50px -6px 50px 5px rgba(218, 151, 40, 0.18);
 }
 
 main #content {
@@ -287,50 +156,17 @@ main #content {
 	text-align: justify;
 }
 
-main #content h1 {
-	background: #C95B55;
-	color: #FF7A73;
-	display: inline-block;
-	font-family: "Avenir", sans-serif;
-	font-size: 50px;
-	line-height: 2.4;
-	padding: 0 1.25rem;
-
-	display: none;
-}
-
-main #content h2 {
-	background: #C95B55;
-	color: #FF7F77;
-	display: inline-block;
-	font-size: 32px;
-	font-weight: 700;
-	margin-bottom: 35px;
-	margin-top: 60px;
-	padding: 20px 30px 20px 30px;
-	font-family: "Avenir", sans-serif;
-}
-
-main #content p {
-	margin-bottom: 25px;
-}
-
-main #content p q {
-	background: #FFCA63;
-	font-style: italic;
-}
-
 main #content a {
-	background: #EEE1DD;
+	background: #EED8D1;
 	transition: background 0.1s;
 }
 
 main #content a:hover {
-	background: #C6CACD;
+	background: #C6C2C2;
 }
 
 main #content blockquote {
-	border-left: 4px solid #FFCA63;
+	border-left: 4px solid #FFC25E;
 	font-style: italic;
 	margin-left: 38px;
 	margin-right: 53px;
@@ -338,7 +174,7 @@ main #content blockquote {
 }
 
 main #content blockquote::before {
-	background: #FFCA63;
+	background: #FFC25E;
 	content: open-quote;
 	font-size: 60px;
 	position: absolute;
@@ -346,7 +182,7 @@ main #content blockquote::before {
 }
 
 main #content blockquote::after {
-	background: #FFCA63;
+	background: #FFC25E;
 	content: close-quote;
 	float: right;
 	font-size: 60px;
@@ -355,13 +191,89 @@ main #content blockquote::after {
 	top: -58px;
 }
 
-main #content ul {
-	margin-left: 38px;
+main #content h1,
+main #content h2 {
+	background: #C95750;
+	border-radius: 1px;
+	color: #FF7A71;
+	display: inline-block;
+	font-family: "Avenir", sans-serif;
+	font-weight: 700;
+}
+
+main #content h1 {
+	bottom: 125px;
+	position: fixed;
+	right: 0px;
+	padding: 30px 37px 30px 37px;
+	z-index: 101;
+}
+
+main #content h2 {
+	margin-bottom: 35px;
+	margin-top: 60px;
+	padding: 20px 30px 20px 30px;
+}
+
+main #content hr {
+	background: #C95750;
+	border: none;
+	height: 4px;
+	margin-bottom: 18px;
+}
+
+main form input {
+	background: #EED8D1;
+	border: none;
+	font-family: "Avenir", sans-serif;
+	font-size: initial;
+	outline: none;
+	padding: 10px;
+	transition: background 0.1s;
+}
+
+main form #upload-container {
+	align-items: center;
+	background: #EED8D1;
+	cursor: pointer;
+	display: flex;
+	height: 200px;
+	width: 100%;
+}
+
+main form #upload-container input {
+	position: absolute;
+	opacity: 0;
+	z-index: -1;
+}
+
+main form #upload-container input + span {
+	background: #C6C2C2;
+	cursor: pointer;
+	display: inline-block;
+	font-family: "Avenir", sans-serif;
+	font-size: initial;
+	padding: 12px;
+}
+
+main form input[type="submit"] {
+	background: #828666;
+	color: #B4BB86;
+	cursor: pointer;
+	float: right;
+}
+
+main form input[type="submit"]:hover {
+	color: var(--link-color);
+}
+
+main form input:required {
+	box-shadow: none;
 }
 
 main #content li::before {
-	background: #828C6C;
-	border-right: 12px solid #EEE1DD;
+	background: #828666;
+	border-right: 12px solid #EED8D1;
 	border-radius: 1px;
 	content: "";
 	width: 5px;
@@ -371,7 +283,26 @@ main #content li::before {
 	margin-top: 16px;
 }
 
-main #content hr {
-	background: #C95B55;
-	border: 4px solid #C95B55;
+main #content p {
+	margin-bottom: 25px;
+}
+
+main #content p q {
+	background: #FFC25E;
+	font-style: italic;
+}
+
+main #content pre {
+	background: #EED8D1;
+	padding: 38px;
+}
+
+main #content pre,
+main #content pre * {
+	font-family: "Courier Prime", mono-space;
+	font-size: 20px;
+}
+
+main #content ul {
+	margin-left: 38px;
 }
