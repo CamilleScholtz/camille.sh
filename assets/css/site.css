@@ -76,6 +76,10 @@ a:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
   .ls td:last-child { display: none; }
 }
 
+/* The 404: the same script, one line long. */
+.notfound { padding-top: clamp(24px, 6vw, 80px); }
+.main p.mono { font: 13px/1.6 var(--mono); }
+
 /* Redaction: a marker bar as wide as what it hides. */
 .censor { display: inline-block; width: var(--w, 6ch); height: 1.1em; background: var(--ink); vertical-align: -.22em; }
 

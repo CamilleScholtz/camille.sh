@@ -24,6 +24,17 @@ That's it. Hugo minifies the CSS and bundles the JS on its own (esbuild lives in
 | `assets/js/site.js` | wires the wordmark to the hero, adds the faint yellow field in the top-left corner on the same grid, and reads the colours from the stylesheet |
 | `static/fonts/` | Martian Mono and Hanken Grotesk, self-hosted, so no visitor ever phones Google |
 
+## Deploying
+
+The site lives at `/www/camille.sh` on the server as a checkout of this repo, next to its siblings, and Caddy serves `public/` from there.
+
+```sh
+ssh www@camille.sh
+cd camille.sh && ./deploy.sh --pull
+```
+
+`deploy.sh` points at `deploy/freebsd/deploy.sh`: pull, build into `build/`, swap it in as `public/` in one move, then tell IndexNow which pages changed (`-n` skips that). `deploy/alpine/deploy.sh` is the same script for a Linux box.
+
 ## Adding a project
 
 Append a `[[params.projects]]` block in `hugo.toml`: `name`, `url`, `platform`, an optional `tagline`, and a `summary`. Set `censored = 11` instead of a name and the row comes out redacted, black bars and all, for the project that isn't public yet. The number is the width of the bar in characters. The summary can carry bars of its own as `<span class="censor" style="--w:9ch"></span>`.
