@@ -1,0 +1,85 @@
+/* camille.sh — direction "Prompt": white paper, ink, one ochre yellow.
+   Yellow on white cannot carry text, so it only ever fills: the cursor,
+   the chips behind # and ~, the highlighter under links, the dense core of
+   the wordmark. Link text stays ink. One theme, by brief. */
+
+@font-face { font-family: 'Martian Mono'; font-style: normal; font-weight: 100 800; font-display: swap; src: url('../fonts/martian-mono.woff2') format('woff2'); }
+@font-face { font-family: 'Hanken Grotesk'; font-style: normal; font-weight: 100 900; font-display: swap; src: url('../fonts/hanken-grotesk.woff2') format('woff2'); }
+@font-face { font-family: 'Hanken Grotesk'; font-style: italic; font-weight: 100 900; font-display: swap; src: url('../fonts/hanken-grotesk-italic.woff2') format('woff2'); }
+
+:root {
+  --paper: #FFFFFF;
+  --ink: #111111;
+  --mute: #6F6F6F;
+  --rule: #E4E4E4;
+  --geel: #E9B02E;
+  --mono: 'Martian Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --sans: 'Hanken Grotesk', system-ui, -apple-system, 'Helvetica Neue', sans-serif;
+  --gutter: clamp(16px, 4vw, 48px);
+  color-scheme: light;
+}
+
+* { box-sizing: border-box; }
+html { background: var(--paper); }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 13px/1.6 var(--mono); -webkit-font-smoothing: antialiased; }
+.wrap { position: relative; z-index: 1; max-width: 1180px; margin: 0 auto; }
+
+/* A faint field of the page's yellow in the top-left corner, on the wordmark's own grid.
+   The box is larger than the glow so the canvas can be shifted to align its cells. */
+.field { position: absolute; top: 0; left: 0; z-index: 0; width: 100%; height: min(1100px, 150vw); overflow: hidden; pointer-events: none; }
+.field canvas { position: absolute; top: 0; left: 0; display: block; image-rendering: pixelated; image-rendering: crisp-edges; }
+::selection { background: var(--geel); color: var(--ink); }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+a { color: var(--ink); text-decoration: underline; text-decoration-color: var(--geel); text-decoration-thickness: .14em; text-underline-offset: .14em; }
+a:hover { background: var(--geel); text-decoration-color: transparent; }
+a:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+
+/* ── The links, under the name ── */
+.links { display: flex; flex-wrap: wrap; gap: 8px 22px; padding: 4px var(--gutter) 28px; }
+@media (max-width: 640px) { .links { gap: 8px 14px; } }
+.links a { text-decoration: none; }
+.links a:hover { background: var(--geel); }
+
+/* ── The wordmark ── */
+.hero { position: relative; margin-top: clamp(16px, 3vw, 40px); aspect-ratio: 5.6 / 1; min-height: 96px; display: grid; place-items: center; overflow: hidden; }
+@media (max-width: 640px) { .hero { aspect-ratio: 2.2 / 1; } }
+.hero canvas { display: block; image-rendering: pixelated; image-rendering: crisp-edges; }
+/* The name is real text until the canvas draws it, and stays in the tree for readers and robots after. */
+.hero h1 { margin: 0; padding: 0 var(--gutter); font: 800 clamp(40px, 10.5vw, 150px)/1 var(--mono); letter-spacing: -.02em; }
+.hero h1::after { content: ''; display: inline-block; width: .5em; height: .72em; margin-left: .12em; background: var(--geel); vertical-align: -.02em; }
+.hero.is-drawn h1 { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; padding: 0; }
+
+/* ── The script ── */
+.main { padding: 8px var(--gutter) 40px; max-width: calc(84ch + 2 * var(--gutter)); }
+.main section { padding-block: 28px; border-top: 1px dashed var(--rule); }
+.main h2 { font-size: 13px; font-weight: 500; margin: 0 0 12px; color: var(--mute); }
+.hash { background: var(--geel); color: var(--ink); padding: 0 .3em; margin-right: .5em; }
+.main p { margin: 0; font: 17px/1.55 var(--sans); max-width: 60ch; }
+.main p + p { margin-top: 12px; }
+.main p.more { margin-top: 16px; font: 12.5px/1.6 var(--mono); color: var(--mute); max-width: none; }
+
+.scroll { overflow-x: auto; }
+.ls { border-collapse: collapse; width: 100%; font-size: 12.5px; }
+.ls th { text-align: left; font-weight: 500; color: var(--mute); padding: 6px 16px 6px 0; border-bottom: 1px solid var(--rule); white-space: nowrap; }
+.ls td { vertical-align: top; padding: 12px 16px 12px 0; border-bottom: 1px solid var(--rule); white-space: nowrap; }
+.ls td:nth-child(3) { font: 15px/1.45 var(--sans); white-space: normal; min-width: 22ch; }
+.ls td:last-child { padding-right: 0; }
+.ls td:last-child a { text-decoration: none; }
+@media (max-width: 640px) {
+  .ls thead { display: none; }
+  .ls, .ls tbody, .ls tr, .ls td { display: block; white-space: normal; }
+  .ls tr { padding: 14px 0; border-bottom: 1px solid var(--rule); }
+  .ls td { padding: 2px 0; border: 0; }
+  .ls td:nth-child(2) { display: inline; color: var(--mute); }
+  .ls td:nth-child(3) { padding-top: 6px; }
+  .ls td:last-child { display: none; }
+}
+
+/* Redaction: a marker bar as wide as what it hides. */
+.censor { display: inline-block; width: var(--w, 6ch); height: 1.1em; background: var(--ink); vertical-align: -.22em; }
+
+/* ── The footer Mollie reads ── */
+.foot { display: flex; flex-wrap: wrap; gap: 6px 22px; padding: 18px var(--gutter); border-top: 1px dashed var(--rule); font-size: 11.5px; color: var(--mute); }
+.foot a { color: inherit; }
+

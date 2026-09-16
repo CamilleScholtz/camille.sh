@@ -1,0 +1,66 @@
+{{ define "main" }}
+{{- $p := site.Params -}}
+<div class="field" aria-hidden="true"><canvas data-field></canvas></div>
+<div class="wrap">
+  <div class="hero">
+    <h1>camille.sh</h1>
+    <canvas data-wordmark aria-hidden="true"></canvas>
+  </div>
+
+  <nav class="links" aria-label="Sections">
+    <a href="#about">./about</a>
+    <a href="#projects">./projects</a>
+    <a href="#freelance">./freelance</a>
+    <a href="{{ $p.github }}" rel="me">github ↗</a>
+  </nav>
+
+  <main class="main">
+    <section id="about">
+      <h2><span class="hash">#</span>about</h2>
+      {{ .RenderString (dict "display" "block") .Params.about }}
+    </section>
+
+    <section id="projects">
+      <h2><span class="hash">#</span>projects</h2>
+      <div class="scroll">
+        <table class="ls">
+          <thead><tr><th>name</th><th>platform</th><th>about</th><th><span class="sr">link</span></th></tr></thead>
+          <tbody>
+            {{- range $p.projects }}
+            <tr>
+              {{- if .censored }}
+              <td><span class="censor" style="--w:{{ .censored }}ch" role="img" aria-label="name withheld"></span></td>
+              {{- else }}
+              <td><a href="{{ .url }}">{{ .name }}</a></td>
+              {{- end }}
+              <td>{{ .platform }}</td>
+              <td>{{ with .tagline }}{{ . }} {{ end }}{{ .summary | safeHTML }}</td>
+              {{- if .censored }}
+              <td><span class="censor" style="--w:1ch" aria-hidden="true"></span></td>
+              {{- else }}
+              <td><a href="{{ .url }}" aria-label="Open {{ .name }}">→</a></td>
+              {{- end }}
+            </tr>
+            {{- end }}
+          </tbody>
+        </table>
+      </div>
+      <p class="more">$ ls ~/github → <a href="{{ $p.github }}">CamilleScholtz ↗</a> · {{ .Params.github_note }}</p>
+    </section>
+
+    <section id="freelance">
+      <h2><span class="hash">#</span>freelance</h2>
+      {{ .RenderString (dict "display" "block") .Params.freelance }}
+      <p>Write to <a href="mailto:{{ $p.email }}">{{ $p.email }}</a>.</p>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <span>{{ site.Title }} is the {{ $p.legalForm }} of {{ $p.owner }}</span>
+    <span>KvK {{ $p.kvk }}</span>
+    <span>VAT {{ $p.btw }}</span>
+    <span>the Netherlands</span>
+    <a href="mailto:{{ $p.email }}">{{ $p.email }}</a>
+  </footer>
+</div>
+{{ end }}

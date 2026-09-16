@@ -1,0 +1,41 @@
+baseURL = 'https://camille.sh/'
+locale = 'en'
+title = 'camille.sh'
+disableKinds = ['taxonomy', 'term', 'rss']
+
+[params]
+  description = "camille.sh is the one-person studio of Camille Scholtz. Apps for macOS and iOS, written in Swift, made in the Netherlands. Available for freelance work."
+  owner = 'Camille Scholtz'
+  legalForm = 'sole proprietorship'
+  email = 'admin@camille.sh'
+  kvk = '83798943'
+  btw = 'NL003874768B19'
+  github = 'https://github.com/CamilleScholtz'
+
+[[params.projects]]
+  name = 'Tripstitch'
+  url = 'https://tripstitch.app'
+  platform = 'iOS'
+  tagline = 'Your next adventure, planned by AI.'
+  summary = 'Day-by-day itineraries with budgets, packing lists, phrasebooks and weather.'
+
+[[params.projects]]
+  name = 'swmpc'
+  url = 'https://github.com/CamilleScholtz/swmpc'
+  platform = 'macOS · iOS'
+  tagline = 'An MPD client for macOS and iOS.'
+  summary = 'Fast library browsing, queues, playlists, favourites, menu-bar controls and widgets.'
+
+[[params.projects]]
+  name = 'Reactionair'
+  url = 'https://reactionair.nl'
+  platform = 'web'
+  summary = 'The site of a Dutch online magazine: essays, columns, a podcast and a bookshop.'
+
+# The mystery project. `censored` is the width of the bar over the name, in
+# characters; the summary may carry bars of its own as
+# <span class="censor" style="--w:9ch"></span>.
+[[params.projects]]
+  censored = 11
+  platform = 'web'
+  summary = 'Something with AI for Dutch <span class="censor" style="--w:13ch"></span>. In closed beta with the first <span class="censor" style="--w:8ch"></span>; the name follows when it is ready.'
