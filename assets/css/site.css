@@ -23,6 +23,8 @@
 html { background: var(--paper); }
 body { margin: 0; background: var(--paper); color: var(--ink); font: 13px/1.6 var(--mono); -webkit-font-smoothing: antialiased; }
 .wrap { position: relative; z-index: 1; max-width: 1180px; margin: 0 auto; }
+/* The field runs under the text; a white halo keeps every letter on white. */
+.links, .main, .foot { text-shadow: 0 0 2px var(--paper), 0 0 5px var(--paper), 0 0 10px var(--paper), 0 0 16px var(--paper); }
 
 /* A faint field of the page's yellow in the top-left corner, on the wordmark's own grid.
    The box is larger than the glow so the canvas can be shifted to align its cells. */
