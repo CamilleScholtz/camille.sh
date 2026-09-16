@@ -21,7 +21,7 @@ That's it. Hugo minifies the CSS and bundles the JS on its own (esbuild lives in
 | `layouts/baseof.html` | the document around it |
 | `assets/css/site.css` | the stylesheet, one theme, one ochre |
 | `assets/js/dither.js` | the wordmark: Bayer 8×8 over domain-warped noise, drawn through a text mask in WebGL, one texel per cell |
-| `assets/js/site.js` | wires the wordmark to the hero, adds the faint yellow field in the top-left corner on the same grid, and reads the colours from the stylesheet |
+| `assets/js/site.js` | wires the wordmark to the hero, makes the weather thicken under the pointer, and reads the colours from the stylesheet |
 | `static/fonts/` | Martian Mono and Hanken Grotesk, self-hosted, so no visitor ever phones Google |
 
 ## Deploying

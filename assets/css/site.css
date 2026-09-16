@@ -22,12 +22,7 @@
 * { box-sizing: border-box; }
 html { background: var(--paper); }
 body { margin: 0; background: var(--paper); color: var(--ink); font: 13px/1.6 var(--mono); -webkit-font-smoothing: antialiased; }
-.wrap { position: relative; z-index: 1; max-width: 1180px; margin: 0 auto; }
-
-/* A faint field of the page's yellow in the top-left corner, on the wordmark's own grid.
-   The box is larger than the glow so the canvas can be shifted to align its cells. */
-.field { position: absolute; top: 0; left: 0; z-index: 0; width: min(780px, 82vw); height: min(460px, 62vw); overflow: hidden; pointer-events: none; }
-.field canvas { position: absolute; top: 0; left: 0; display: block; image-rendering: pixelated; image-rendering: crisp-edges; }
+.wrap { max-width: 1180px; margin: 0 auto; }
 ::selection { background: var(--geel); color: var(--ink); }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 

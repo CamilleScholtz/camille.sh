@@ -5,7 +5,8 @@
  *   0  a wordmark rasterised at cell resolution (`text`, `tail`, `cursor`)
  *   1  the schelp: a log spiral at the nautilus growth rate
  *   2  a band that thickens toward the bottom edge
- *   3  a glow fading out from a corner (`onLayout` sets the corner and radius)
+ * The returned api: `at(x, y)` and `pointer.on` lift and stir the wave within
+ * `reach` of the pointer; `hold` keeps the cursor solid.
  * Ported from the proposal sheet (2026-09-16); direction-independent.
  */
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -76,6 +77,9 @@ uniform float uBlink;
 uniform vec2 uOffset;
 uniform float uScale;
 uniform float uSpin;
+uniform vec2 uPointer;
+uniform float uReach;
+uniform float uPull;
 ${CHUNK}
 
 /* A nautilus: a log spiral at the golden growth rate, half of each turn an arm. */
@@ -105,15 +109,15 @@ void main() {
       warmOk = m.r;
   } else if (uMode == 1) {
       mask = schelp(uv);
-  } else if (uMode == 3) {
-      /* A glow in a corner: an ellipse fading out from uOffset, wider than tall. */
-      vec2 p = (uv - uOffset) * uScale;
-      mask = 1.0 - smoothstep(0.0, 1.0, length(p * vec2(0.6, 1.0)));
   } else {
       mask = smoothstep(0.12, 1.0, unit.y);
   }
 
-  float golf = pattern(uv * uZoom + uSeed) * GAIN;
+  /* The pointer: within reach the wave is lifted and locally stirred, so the
+     cells crowd in and the core blooms where the pointer is. */
+  float near = uPull * (1.0 - smoothstep(0.0, uReach, length(uv - uPointer)));
+  vec2 stir = near * 0.12 * vec2(sin(uTime * 1.7), cos(uTime * 1.3));
+  float golf = pattern(uv * uZoom + uSeed + stir) * GAIN + near * 0.55;
   float value = kwantiseer((golf + uBody) * mask, texel, uLevels);
   float warm = clamp((golf - 0.35) / 0.4, 0.0, 1.0) * warmOk;
   vec3 kleur = warm > bayer8(mod(texel + vec2(3.0, 5.0), 8.0)) ? uAccent : uColor;
@@ -136,13 +140,15 @@ function dither(canvas, o) {
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
   const loc = gl.getAttribLocation(p, 'aPosition'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
   const U = {};
-  ['uGrid','uColor','uAccent','uAlpha','uLevels','uSeed','uZoom','uBody','uMode','uMask','uBlink','uOffset','uScale','uSpin','uTime','uSpeed','uFrequency','uAmplitude']
+  ['uGrid','uColor','uAccent','uAlpha','uLevels','uSeed','uZoom','uBody','uMode','uMask','uBlink','uOffset','uScale','uSpin','uTime','uSpeed','uFrequency','uAmplitude','uPointer','uReach','uPull']
     .forEach(n => U[n] = gl.getUniformLocation(p, n));
   gl.uniform3fv(U.uColor, hex(o.color)); gl.uniform3fv(U.uAccent, hex(o.accent));
   gl.uniform1f(U.uAlpha, o.alpha ?? 1); gl.uniform1f(U.uLevels, 4); gl.uniform1f(U.uFrequency, 3); gl.uniform1f(U.uAmplitude, 0.3);
   gl.uniform1f(U.uSpeed, o.speed ?? 0.03); gl.uniform1f(U.uZoom, o.zoom ?? 2); gl.uniform1f(U.uBody, o.body ?? 0);
   gl.uniform1i(U.uMode, o.mode); gl.uniform2f(U.uSeed, Math.random() * 64, Math.random() * 64);
   gl.uniform2f(U.uOffset, 0, 0); gl.uniform1f(U.uScale, 1); gl.uniform1f(U.uBlink, 1); gl.uniform1f(U.uSpin, 0);
+  gl.uniform2f(U.uPointer, 0, 0); gl.uniform1f(U.uReach, o.reach ?? 0.5); gl.uniform1f(U.uPull, 0);
+  const api = { hold: false, pointer: { x: 0, y: 0, on: false }, pull: 0 };
   let tex = null;
   if (o.mode === 0) {
     tex = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, tex);
@@ -191,7 +197,9 @@ function dither(canvas, o) {
   function draw(now) {
     const t = now / 1000;
     gl.uniform1f(U.uTime, reduced ? 7.3 : t);
-    gl.uniform1f(U.uBlink, reduced ? 1 : ((t % 1.1) < 0.6 ? 1 : 0));
+    gl.uniform1f(U.uBlink, (api.hold || reduced) ? 1 : ((t % 1.1) < 0.6 ? 1 : 0));
+    api.pull += ((api.pointer.on && !reduced ? 1 : 0) - api.pull) * 0.12;
+    gl.uniform1f(U.uPull, api.pull); gl.uniform2f(U.uPointer, api.pointer.x, api.pointer.y);
     gl.uniform1f(U.uSpin, reduced ? 0 : t * (o.spin || 0));
     gl.clear(gl.COLOR_BUFFER_BIT);
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
@@ -216,12 +224,16 @@ function dither(canvas, o) {
     canvas.parentElement.classList.add("is-drawn");
   }
 
+  /* The pointer in this canvas's own uv: units of the canvas height, centred. */
+  api.at = (clientX, clientY) => { const r = canvas.getBoundingClientRect(); api.pointer.x = ((clientX - r.left) / r.width * gw - 0.5 * gw) / gh; api.pointer.y = ((clientY - r.top) / r.height * gh - 0.5 * gh) / gh; };
+
   let visible = true, last = 0;
   new IntersectionObserver(e => { visible = e[0].isIntersecting; }).observe(canvas);
   new ResizeObserver(() => layout()).observe(canvas.parentElement);
   if (o.mode === 0 && document.fonts && document.fonts.load) document.fonts.load(`${o.weight} 40px ${o.font}`).then(layout, layout);
   else layout();
   if (!reduced) (function frame(now) { requestAnimationFrame(frame); if (!visible || now - last < 33) return; last = now; draw(now); })(0);
+  return api;
 }
 
 export { dither };
