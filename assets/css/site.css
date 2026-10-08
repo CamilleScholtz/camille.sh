@@ -1,7 +1,8 @@
 /* camille.sh — direction "Prompt": white paper, ink, one ochre yellow.
    Yellow on white cannot carry text, so it only ever fills: the cursor,
    the chips behind # and ~, the highlighter under links, the dense core of
-   the wordmark. Link text stays ink. One theme, by brief. */
+   the wordmark. Link text stays ink. Dark follows the system: the paper
+   and ink swap, the yellow stays, and text on yellow is always dark. */
 
 @font-face { font-family: 'Martian Mono'; font-style: normal; font-weight: 100 800; font-display: swap; src: url('../fonts/martian-mono.woff2') format('woff2'); }
 @font-face { font-family: 'Hanken Grotesk'; font-style: normal; font-weight: 100 900; font-display: swap; src: url('../fonts/hanken-grotesk.woff2') format('woff2'); }
@@ -13,28 +14,36 @@
   --mute: #6F6F6F;
   --rule: #E4E4E4;
   --geel: #E9B02E;
+  --on-geel: #111111;
   --mono: 'Martian Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
   --sans: 'Hanken Grotesk', system-ui, -apple-system, 'Helvetica Neue', sans-serif;
   --gutter: clamp(16px, 4vw, 48px);
-  color-scheme: light;
+  color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #000000;
+    --ink: #EDEDED;
+    --mute: #8C8C8C;
+    --rule: #2A2A2A;
+  }
 }
 
 * { box-sizing: border-box; }
 html { background: var(--paper); }
 body { margin: 0; background: var(--paper); color: var(--ink); font: 13px/1.6 var(--mono); -webkit-font-smoothing: antialiased; }
 .wrap { max-width: 1180px; margin: 0 auto; }
-::selection { background: var(--geel); color: var(--ink); }
+::selection { background: var(--geel); color: var(--on-geel); }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
 a { color: var(--ink); text-decoration: underline; text-decoration-color: var(--geel); text-decoration-thickness: .14em; text-underline-offset: .14em; }
-a:hover { background: var(--geel); text-decoration-color: transparent; }
+a:hover { background: var(--geel); color: var(--on-geel); text-decoration-color: transparent; }
 a:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
 
 /* ── The links, under the name ── */
 .links { display: flex; flex-wrap: wrap; gap: 8px 22px; padding: 4px var(--gutter) 28px; }
 @media (max-width: 640px) { .links { gap: 8px 14px; } }
 .links a { text-decoration: none; }
-.links a:hover { background: var(--geel); }
 
 /* ── The wordmark ── */
 .hero { position: relative; margin-top: clamp(16px, 3vw, 40px); aspect-ratio: 5.6 / 1; min-height: 96px; display: grid; place-items: center; overflow: hidden; }
@@ -49,7 +58,7 @@ a:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
 .main { padding: 8px var(--gutter) 40px; max-width: calc(84ch + 2 * var(--gutter)); }
 .main section { padding-block: 28px; border-top: 1px dashed var(--rule); }
 .main h2 { font-size: 13px; font-weight: 500; margin: 0 0 12px; color: var(--mute); }
-.hash { background: var(--geel); color: var(--ink); padding: 0 .3em; margin-right: .5em; }
+.hash { background: var(--geel); color: var(--on-geel); padding: 0 .3em; margin-right: .5em; }
 .main p { margin: 0; font: 17px/1.55 var(--sans); max-width: 60ch; }
 .main p + p { margin-top: 12px; }
 .main p.more { margin-top: 16px; font: 12.5px/1.6 var(--mono); color: var(--mute); max-width: none; }
@@ -76,7 +85,7 @@ a:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
 .main p.mono { font: 13px/1.6 var(--mono); }
 
 /* Redaction: a marker bar as wide as what it hides. */
-.censor { display: inline-block; width: var(--w, 6ch); height: 1.1em; background: var(--ink); vertical-align: -.22em; }
+.censor { display: inline-block; width: var(--w, 6ch); max-width: 100%; height: 1.1em; background: var(--ink); vertical-align: -.22em; }
 
 /* ── The footer Mollie reads ── */
 .foot { display: flex; flex-wrap: wrap; gap: 6px 22px; padding: 18px var(--gutter); border-top: 1px dashed var(--rule); font-size: 11.5px; color: var(--mute); }

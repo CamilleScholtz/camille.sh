@@ -27,6 +27,13 @@ disableKinds = ['taxonomy', 'term', 'rss']
   summary = 'Fast library browsing, queues, playlists, favourites, menu-bar controls and widgets.'
 
 [[params.projects]]
+  name = 'Westlands'
+  url = 'https://map.camille.sh'
+  platform = 'web'
+  tagline = 'An interactive map of The Wheel of Time.'
+  summary = 'Every place in the Westlands, cross-linked and spoiler-free: each entry stops at the chapter you have reached.'
+
+[[params.projects]]
   name = 'Reactionair'
   url = 'https://reactionair.nl'
   platform = 'web'
@@ -38,4 +45,4 @@ disableKinds = ['taxonomy', 'term', 'rss']
 [[params.projects]]
   censored = 11
   platform = 'web'
-  summary = 'Something with AI for Dutch <span class="censor" style="--w:13ch"></span>. In closed beta with the first <span class="censor" style="--w:8ch"></span>; the name follows when it is ready.'
+  summary = 'An <span class="censor" style="--w:38ch"></span>: it <span class="censor" style="--w:41ch"></span> on the record and <span class="censor" style="--w:44ch"></span> that follow. <span class="censor" style="--w:27ch"></span>; the name follows when it is ready.'

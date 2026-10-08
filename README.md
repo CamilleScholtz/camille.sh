@@ -19,7 +19,7 @@ That's it. Hugo minifies the CSS and bundles the JS on its own (esbuild lives in
 | `hugo.toml` | the facts: owner, email, KvK, VAT, GitHub, and the project list |
 | `layouts/home.html` | the page |
 | `layouts/baseof.html` | the document around it |
-| `assets/css/site.css` | the stylesheet, one theme, one ochre |
+| `assets/css/site.css` | the stylesheet: light, or dark when the system is, and one ochre |
 | `assets/js/dither.js` | the wordmark: Bayer 8×8 over domain-warped noise, drawn through a text mask in WebGL, one texel per cell |
 | `assets/js/site.js` | wires the wordmark to the hero, makes the weather thicken under the pointer, and reads the colours from the stylesheet |
 | `static/fonts/` | Martian Mono and Hanken Grotesk, self-hosted, so no visitor ever phones Google |

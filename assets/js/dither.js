@@ -1,13 +1,9 @@
 /*
- * The dither, as one WebGL module: the same wave and Bayer 8×8 matrix as the
- * griffie.ai field, drawn one texel per cell and scaled up with
- * `image-rendering: pixelated`. Three masks, chosen by `mode`:
- *   0  a wordmark rasterised at cell resolution (`text`, `tail`, `cursor`)
- *   1  the schelp: a log spiral at the nautilus growth rate
- *   2  a band that thickens toward the bottom edge
+ * The wordmark, as one WebGL module: the same wave and Bayer 8×8 matrix as the
+ * griffie.ai field, drawn one texel per cell through a mask of `text`, `tail`
+ * and an optional `cursor`, and scaled up with `image-rendering: pixelated`.
  * The returned api: `at(x, y)` and `pointer.on` lift and stir the wave within
- * `reach` of the pointer; `hold` keeps the cursor solid.
- * Ported from the proposal sheet (2026-09-16); direction-independent.
+ * `reach` of the pointer; `paint(color, accent)` recolours it.
  */
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -66,52 +62,26 @@ precision highp float;
 uniform vec2 uGrid;
 uniform vec3 uColor;
 uniform vec3 uAccent;
-uniform float uAlpha;
 uniform float uLevels;
 uniform vec2 uSeed;
 uniform float uZoom;
 uniform float uBody;
-uniform int uMode;
 uniform sampler2D uMask;
 uniform float uBlink;
-uniform vec2 uOffset;
-uniform float uScale;
-uniform float uSpin;
 uniform vec2 uPointer;
 uniform float uReach;
 uniform float uPull;
 ${CHUNK}
-
-/* A nautilus: a log spiral at the golden growth rate, half of each turn an arm. */
-float schelp(vec2 p) {
-  p = (p - uOffset) * uScale;
-  float r = length(p);
-  float th = atan(p.y, p.x) + uSpin;
-  float k = (log(max(r, 0.001)) / 0.176 - th) / 6.2831853;
-  float f = fract(k);
-  float arm = smoothstep(0.0, 0.10, f) * (1.0 - smoothstep(0.52, 0.64, f));
-  arm = mix(1.0, arm, smoothstep(0.03, 0.16, r));
-  float disc = 1.0 - smoothstep(0.80, 1.0, r);
-  return arm * disc;
-}
 
 void main() {
   vec2 texel = vec2(floor(gl_FragCoord.x), uGrid.y - 1.0 - floor(gl_FragCoord.y));
   vec2 unit = (texel + 0.5) / uGrid;
   vec2 uv = (texel - 0.5 * uGrid) / uGrid.y;
 
-  float mask = 1.0;
-  float warmOk = 1.0;
-  if (uMode == 0) {
-      vec4 m = texture2D(uMask, unit);
-      if (m.b > 0.5) { gl_FragColor = vec4(uAccent * uBlink, uBlink); return; }
-      mask = step(0.5, m.a);
-      warmOk = m.r;
-  } else if (uMode == 1) {
-      mask = schelp(uv);
-  } else {
-      mask = smoothstep(0.12, 1.0, unit.y);
-  }
+  vec4 m = texture2D(uMask, unit);
+  if (m.b > 0.5) { gl_FragColor = vec4(uAccent * uBlink, uBlink); return; }
+  float mask = step(0.5, m.a);
+  float warmOk = m.r;
 
   /* The pointer: within reach the wave is lifted and locally stirred, so the
      cells crowd in and the core blooms where the pointer is. */
@@ -121,8 +91,7 @@ void main() {
   float value = kwantiseer((golf + uBody) * mask, texel, uLevels);
   float warm = clamp((golf - 0.35) / 0.4, 0.0, 1.0) * warmOk;
   vec3 kleur = warm > bayer8(mod(texel + vec2(3.0, 5.0), 8.0)) ? uAccent : uColor;
-  float alpha = value * uAlpha;
-  gl_FragColor = vec4(kleur * alpha, alpha);
+  gl_FragColor = vec4(kleur * value, value);
 }`;
 
 function hex(h) { const n = parseInt(h.slice(1), 16); return [((n >> 16) & 255) / 255, ((n >> 8) & 255) / 255, (n & 255) / 255]; }
@@ -136,26 +105,24 @@ function dither(canvas, o) {
   gl.attachShader(p, sh(gl.VERTEX_SHADER, VERT)); gl.attachShader(p, sh(gl.FRAGMENT_SHADER, FRAG)); gl.linkProgram(p);
   if (!gl.getProgramParameter(p, gl.LINK_STATUS)) { console.error(gl.getProgramInfoLog(p)); return; }
   gl.useProgram(p);
-  const buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
   const loc = gl.getAttribLocation(p, 'aPosition'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
   const U = {};
-  ['uGrid','uColor','uAccent','uAlpha','uLevels','uSeed','uZoom','uBody','uMode','uMask','uBlink','uOffset','uScale','uSpin','uTime','uSpeed','uFrequency','uAmplitude','uPointer','uReach','uPull']
+  ['uGrid','uColor','uAccent','uLevels','uSeed','uZoom','uBody','uMask','uBlink','uTime','uSpeed','uFrequency','uAmplitude','uPointer','uReach','uPull']
     .forEach(n => U[n] = gl.getUniformLocation(p, n));
-  gl.uniform3fv(U.uColor, hex(o.color)); gl.uniform3fv(U.uAccent, hex(o.accent));
-  gl.uniform1f(U.uAlpha, o.alpha ?? 1); gl.uniform1f(U.uLevels, 4); gl.uniform1f(U.uFrequency, 3); gl.uniform1f(U.uAmplitude, 0.3);
+  gl.uniform1f(U.uLevels, 4); gl.uniform1f(U.uFrequency, 3); gl.uniform1f(U.uAmplitude, 0.3);
   gl.uniform1f(U.uSpeed, o.speed ?? 0.03); gl.uniform1f(U.uZoom, o.zoom ?? 2); gl.uniform1f(U.uBody, o.body ?? 0);
-  gl.uniform1i(U.uMode, o.mode); gl.uniform2f(U.uSeed, Math.random() * 64, Math.random() * 64);
-  gl.uniform2f(U.uOffset, 0, 0); gl.uniform1f(U.uScale, 1); gl.uniform1f(U.uBlink, 1); gl.uniform1f(U.uSpin, 0);
+  gl.uniform2f(U.uSeed, Math.random() * 64, Math.random() * 64); gl.uniform1f(U.uBlink, 1);
   gl.uniform2f(U.uPointer, 0, 0); gl.uniform1f(U.uReach, o.reach ?? 0.5); gl.uniform1f(U.uPull, 0);
-  const api = { hold: false, pointer: { x: 0, y: 0, on: false }, pull: 0 };
-  let tex = null;
-  if (o.mode === 0) {
-    tex = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, tex);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-    gl.uniform1i(U.uMask, 0);
-  }
+  const api = { pointer: { x: 0, y: 0, on: false }, pull: 0 };
+  /* The colours can change under a running page, when the system theme does. */
+  api.paint = (color, accent) => { gl.uniform3fv(U.uColor, hex(color)); gl.uniform3fv(U.uAccent, hex(accent)); draw(performance.now()); };
+  gl.uniform3fv(U.uColor, hex(o.color)); gl.uniform3fv(U.uAccent, hex(o.accent));
+  gl.bindTexture(gl.TEXTURE_2D, gl.createTexture());
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+  gl.uniform1i(U.uMask, 0);
   gl.clearColor(0, 0, 0, 0);
   let gw = 0, gh = 0;
 
@@ -163,8 +130,8 @@ function dither(canvas, o) {
      marks where the accent may appear, blue is the cursor block. A box
      narrower than about three of its heights takes the name on two lines. */
   function mask() {
-    const off = document.createElement("canvas"); off.width = gw; off.height = gh;
-    const c = off.getContext("2d");
+    const off = document.createElement('canvas'); off.width = gw; off.height = gh;
+    const c = off.getContext('2d');
     const pad = Math.max(1, Math.round(gw * 0.025));
     const twoLine = gw / gh < 3.2;
     const gap = 0.18, cur = o.cursor ? 0.72 : 0;
@@ -181,15 +148,14 @@ function dither(canvas, o) {
     const top = (gh - tall * size) / 2, x = pad;
     const y1 = Math.round(top + A);
     const y2 = twoLine ? Math.round(top + A + gap * size + A) : y1;
-    c.fillStyle = "#000"; c.fillText(o.text, x, y1);
+    c.fillStyle = '#000'; c.fillText(o.text, x, y1);
     /* The mono dot sits centred in a full cell; the tail is kerned in so the name reads as one word. */
     const tx = twoLine ? x : x + (wText - (o.kern || 0)) * size;
-    c.fillStyle = "#f00"; c.fillText(o.tail, tx, y2);
+    c.fillStyle = '#f00'; c.fillText(o.tail, tx, y2);
     if (o.cursor) {
-      c.fillStyle = "#00f";
+      c.fillStyle = '#00f';
       c.fillRect(Math.round(tx + wTail * size + size * 0.14), Math.round(y2 - A), Math.max(2, Math.round(size * 0.5)), Math.round(A));
     }
-    gl.bindTexture(gl.TEXTURE_2D, tex);
     gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, off);
   }
@@ -197,10 +163,9 @@ function dither(canvas, o) {
   function draw(now) {
     const t = now / 1000;
     gl.uniform1f(U.uTime, reduced ? 7.3 : t);
-    gl.uniform1f(U.uBlink, (api.hold || reduced) ? 1 : ((t % 1.1) < 0.6 ? 1 : 0));
+    gl.uniform1f(U.uBlink, reduced || (t % 1.1) < 0.6 ? 1 : 0);
     api.pull += ((api.pointer.on && !reduced ? 1 : 0) - api.pull) * 0.12;
     gl.uniform1f(U.uPull, api.pull); gl.uniform2f(U.uPointer, api.pointer.x, api.pointer.y);
-    gl.uniform1f(U.uSpin, reduced ? 0 : t * (o.spin || 0));
     gl.clear(gl.COLOR_BUFFER_BIT);
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
   }
@@ -211,17 +176,14 @@ function dither(canvas, o) {
     const box = canvas.parentElement.getBoundingClientRect();
     if (box.width < 2 || box.height < 2) return;
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    /* The cell: given outright (so two canvases can share one grid), or so many columns across the box. */
-    const cols = typeof o.cols === "function" ? o.cols(box.width) : o.cols;
-    const cell = o.cell ? (typeof o.cell === "function" ? o.cell() : o.cell) : Math.max(1, Math.round(box.width / cols * dpr)) / dpr;
+    const cell = Math.max(1, Math.round(box.width / o.cols(box.width) * dpr)) / dpr;
     gw = Math.max(8, Math.floor(box.width / cell)); gh = Math.max(8, Math.floor(box.height / cell));
     canvas.width = gw; canvas.height = gh;
     canvas.style.width = (gw * cell) + 'px'; canvas.style.height = (gh * cell) + 'px';
     gl.viewport(0, 0, gw, gh); gl.uniform2f(U.uGrid, gw, gh);
-    if (o.mode === 0) mask();
-    if (o.onLayout) o.onLayout(gw, gh, (off, sc) => { gl.uniform2f(U.uOffset, off[0], off[1]); gl.uniform1f(U.uScale, sc); });
+    mask();
     draw(performance.now());
-    canvas.parentElement.classList.add("is-drawn");
+    canvas.parentElement.classList.add('is-drawn');
   }
 
   /* The pointer in this canvas's own uv: units of the canvas height, centred. */
@@ -230,8 +192,7 @@ function dither(canvas, o) {
   let visible = true, last = 0;
   new IntersectionObserver(e => { visible = e[0].isIntersecting; }).observe(canvas);
   new ResizeObserver(() => layout()).observe(canvas.parentElement);
-  if (o.mode === 0 && document.fonts && document.fonts.load) document.fonts.load(`${o.weight} 40px ${o.font}`).then(layout, layout);
-  else layout();
+  document.fonts.load(`${o.weight} 40px ${o.font}`).then(layout, layout);
   if (!reduced) (function frame(now) { requestAnimationFrame(frame); if (!visible || now - last < 33) return; last = now; draw(now); })(0);
   return api;
 }
